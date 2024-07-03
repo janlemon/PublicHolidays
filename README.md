@@ -1,6 +1,6 @@
 # OpenHolidays API Custom Connector
 
-This repository contains the custom connector for the OpenHolidays API, created by Jan Lemon. The OpenHolidays API allows easy access to holiday and vacation information worldwide directly in Power Automate.
+This repository contains the custom connector for the OpenHolidays API. The OpenHolidays API allows easy access to holiday and vacation information worldwide directly in Power Automate.
 
 ## Features
 
@@ -52,4 +52,4 @@ This project is licensed under the Open Database License. For more information, 
 
 ## Contact
 
-For more information, visit the [OpenHolidays API Project](https://www.openholidaysapi.org) or contact Jan Lemon.
+For more information, visit the [OpenHolidays API Project](https://www.openholidaysapi.org)
