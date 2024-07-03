@@ -1,0 +1,811 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenHolidays API v1",
+    "description": "This custom connector for the OpenHolidays API allows easy access to holiday and vacation information worldwide directly in Power Automate. The connector provides various operations, enabling you to retrieve public and school holidays, supported languages and countries, as well as statistics related to these holidays. With this connector, you can automate processes and integrations that require up-to-date and accurate holiday information. By Lemon",
+    "contact": {
+      "name": "The OpenHolidays API Project",
+      "url": "https://www.openholidaysapi.org"
+    },
+    "license": {
+      "name": "Open Database License",
+      "url": "https://github.com/openpotato/openholidaysapi.data/blob/main/LICENSE"
+    },
+    "version": "v1"
+  },
+  "host": "openholidaysapi.org",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/Countries": {
+      "get": {
+        "tags": [
+          "Regional"
+        ],
+        "summary": "Returns a list of all supported countries",
+        "produces": [
+          "text/plain",
+          "text/json",
+          "application/json",
+          "text/csv"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "languageIsoCode",
+            "description": "ISO-639-1 code of a language or empty",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CountryResponse"
+              }
+            }
+          }
+        },
+        "operationId": "GetHolidaysByCountryAndYear",
+        "description": "Retrieves the list of holidays for a specified country and year. This operation allows you to get detailed information about each holiday, including the date, name, and description."
+      }
+    },
+    "/Languages": {
+      "get": {
+        "tags": [
+          "Regional"
+        ],
+        "summary": "Returns a list of all used languages",
+        "produces": [
+          "text/plain",
+          "text/json",
+          "application/json",
+          "text/csv"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "languageIsoCode",
+            "description": "ISO-639-1 code of a language or empty",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LanguageResponse"
+              }
+            }
+          }
+        },
+        "operationId": "GetSupportedLanguages",
+        "description": "Retrieves the list of languages supported by the OpenHolidays API. This operation provides the language codes and names that can be used to query holidays in different languages."
+      }
+    },
+    "/PublicHolidays": {
+      "get": {
+        "tags": [
+          "Holidays"
+        ],
+        "summary": "Returns list of public holidays for a given country",
+        "produces": [
+          "text/plain",
+          "text/json",
+          "application/json",
+          "text/calendar",
+          "text/csv"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "countryIsoCode",
+            "description": "ISO 3166-1 code of the country",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "languageIsoCode",
+            "description": "ISO-639-1 code of a language or empty",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "validFrom",
+            "description": "Start of the date range",
+            "required": true,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "validTo",
+            "description": "End of the date range",
+            "required": true,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "subdivisionCode",
+            "description": "Code of the subdivision or empty",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/HolidayResponse"
+              }
+            }
+          }
+        },
+        "description": "Retrieves the list of public holidays for a specified country and year. This operation allows you to get detailed information about each public holiday, including the date, name, and description. Date Format: 2023-12-31",
+        "operationId": "GetPublicHolidays"
+      }
+    },
+    "/PublicHolidaysByDate": {
+      "get": {
+        "tags": [
+          "Holidays"
+        ],
+        "summary": "Returns a list of public holidays from all countries for a given date.",
+        "produces": [
+          "text/plain",
+          "text/json",
+          "application/json",
+          "text/csv"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "languageIsoCode",
+            "description": "ISO-639-1 code of a language or empty",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "Date of interest",
+            "required": true,
+            "type": "string",
+            "format": "date"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/HolidayByDateResponse"
+              }
+            }
+          }
+        },
+        "operationId": "GetPublicHolidaysByDate",
+        "description": "Fetches the list of public holidays that fall on a specified date. This operation allows you to see all public holidays occurring on a given day across all supported countries."
+      }
+    },
+    "/SchoolHolidays": {
+      "get": {
+        "tags": [
+          "Holidays"
+        ],
+        "summary": "Returns list of official school holidays for a given country",
+        "produces": [
+          "text/plain",
+          "text/json",
+          "application/json",
+          "text/calendar",
+          "text/csv"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "countryIsoCode",
+            "description": "ISO 3166-1 code of the country",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "languageIsoCode",
+            "description": "ISO-639-1 code of a language or empty",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "validFrom",
+            "description": "Start of the date range",
+            "required": true,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "validTo",
+            "description": "End of the date range",
+            "required": true,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "subdivisionCode",
+            "description": "Code of the subdivision or empty",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/HolidayResponse"
+              }
+            }
+          }
+        },
+        "operationId": "GetSchoolHolidays",
+        "description": "Retrieves the list of school holidays for a specified country and year. This operation provides detailed information about each school holiday, including the start and end dates, name, and description."
+      }
+    },
+    "/SchoolHolidaysByDate": {
+      "get": {
+        "tags": [
+          "Holidays"
+        ],
+        "summary": "Returns a list of school holidays from all countries for a given date.",
+        "produces": [
+          "text/plain",
+          "text/json",
+          "application/json",
+          "text/csv"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "languageIsoCode",
+            "description": "ISO-639-1 code of a language or empty",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "Date of interest",
+            "required": true,
+            "type": "string",
+            "format": "date"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/HolidayByDateResponse"
+              }
+            }
+          }
+        },
+        "operationId": "GetSchoolHolidaysByDate",
+        "description": "Fetches the list of school holidays that fall on a specified date. This operation allows you to see all school holidays occurring on a given day across all supported countries."
+      }
+    },
+    "/Statistics/PublicHolidays": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Returns statistical data about public holidays for a given country.",
+        "produces": [
+          "text/plain",
+          "text/json",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "countryIsoCode",
+            "description": "ISO 3166-1 code of the country",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "subdivisionCode",
+            "description": "Code of the subdivision or empty",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/StatisticsResponse"
+            }
+          }
+        },
+        "description": "Retrieves statistics for public holidays, including the total number of public holidays and other relevant data for a specified country and year. This operation provides insights into the distribution and frequency of public holidays.",
+        "operationId": "GetPublicHolidayStatistics"
+      }
+    },
+    "/Statistics/SchoolHolidays": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Returns statistical data about school holidays for a given country",
+        "produces": [
+          "text/plain",
+          "text/json",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "countryIsoCode",
+            "description": "ISO 3166-1 code of the country",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "subdivisionCode",
+            "description": "Code of the subdivision or empty",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/StatisticsResponse"
+            }
+          }
+        },
+        "description": "Retrieves statistics for school holidays, including the total number of school holidays and other relevant data for a specified country and year. This operation provides insights into the distribution and frequency of school holidays.",
+        "operationId": "GetSchoolHolidayStatistics"
+      }
+    },
+    "/Subdivisions": {}
+  },
+  "definitions": {
+    "CountryReference": {
+      "description": "Representation of a country reference",
+      "required": [
+        "isoCode"
+      ],
+      "type": "object",
+      "properties": {
+        "isoCode": {
+          "description": "Country ISO code",
+          "minLength": 1,
+          "type": "string",
+          "example": "DE"
+        }
+      },
+      "additionalProperties": false,
+      "readOnly": true
+    },
+    "CountryResponse": {
+      "description": "Representation of a country as defined in ISO 3166-1",
+      "required": [
+        "isoCode",
+        "name",
+        "officialLanguages"
+      ],
+      "type": "object",
+      "properties": {
+        "isoCode": {
+          "description": "ISO 3166-1 country code",
+          "minLength": 1,
+          "type": "string",
+          "example": "DE"
+        },
+        "name": {
+          "description": "Localized country names",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LocalizedText"
+          },
+          "example": [
+            {
+              "language": "EN",
+              "text": "Germany"
+            },
+            {
+              "language": "DE",
+              "text": "Deutschland"
+            }
+          ]
+        },
+        "officialLanguages": {
+          "description": "Official ISO-639-1 language codes",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "DE"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "readOnly": true
+    },
+    "HolidayByDateResponse": {
+      "description": "Representation of a holiday by date",
+      "required": [
+        "country",
+        "id",
+        "name",
+        "nationwide",
+        "subdivisions"
+      ],
+      "type": "object",
+      "properties": {
+        "comment": {
+          "description": "Additional localized comments",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LocalizedText"
+          }
+        },
+        "country": {
+          "$ref": "#/definitions/CountryReference"
+        },
+        "id": {
+          "format": "uuid",
+          "description": "Unqiue holiday id",
+          "type": "string",
+          "example": "ff3b77a3-8c31-47af-b1c7-f26dd51f3c19"
+        },
+        "name": {
+          "description": "Localized names of the holiday",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LocalizedText"
+          }
+        },
+        "nationwide": {
+          "description": "Is the holiday nationwide?",
+          "type": "boolean",
+          "example": true
+        },
+        "quality": {
+          "$ref": "#/definitions/HolidayQuality"
+        },
+        "subdivisions": {
+          "description": "List of subdivision references",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubdivisionReference"
+          }
+        },
+        "type": {
+          "$ref": "#/definitions/HolidayType"
+        }
+      },
+      "additionalProperties": false,
+      "readOnly": true
+    },
+    "HolidayQuality": {
+      "description": "Type of holiday",
+      "enum": [
+        "Mandatory",
+        "Optional"
+      ],
+      "type": "string",
+      "readOnly": true,
+      "title": ""
+    },
+    "HolidayResponse": {
+      "description": "Representation of a holiday",
+      "required": [
+        "endDate",
+        "id",
+        "name",
+        "nationwide",
+        "startDate",
+        "subdivisions"
+      ],
+      "type": "object",
+      "properties": {
+        "comment": {
+          "description": "Additional localized comments",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LocalizedText"
+          }
+        },
+        "endDate": {
+          "format": "date",
+          "description": "End date of the holiday",
+          "type": "string",
+          "example": "2022-12-31"
+        },
+        "id": {
+          "format": "uuid",
+          "description": "Unqiue holiday id",
+          "type": "string",
+          "example": "ff3b77a3-8c31-47af-b1c7-f26dd51f3c19"
+        },
+        "name": {
+          "description": "Localized names of the holiday",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LocalizedText"
+          }
+        },
+        "nationwide": {
+          "description": "Is the holiday nationwide?",
+          "type": "boolean",
+          "example": true
+        },
+        "quality": {
+          "$ref": "#/definitions/HolidayQuality"
+        },
+        "startDate": {
+          "format": "date",
+          "description": "Start date of the holiday",
+          "type": "string",
+          "example": "2022-01-01"
+        },
+        "subdivisions": {
+          "description": "List of subdivision references",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubdivisionReference"
+          }
+        },
+        "type": {
+          "$ref": "#/definitions/HolidayType"
+        }
+      },
+      "additionalProperties": false,
+      "readOnly": true
+    },
+    "HolidayType": {
+      "description": "Type of holiday",
+      "enum": [
+        "Public",
+        "Bank",
+        "National",
+        "Regional",
+        "Local",
+        "School",
+        "BackToSchool",
+        "EndOfLessons"
+      ],
+      "type": "string",
+      "readOnly": true,
+      "title": ""
+    },
+    "LanguageResponse": {
+      "description": "Representation of a language as defined in ISO-639-1",
+      "required": [
+        "isoCode",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "isoCode": {
+          "description": "ISO-639-1 language code",
+          "minLength": 1,
+          "type": "string",
+          "example": "DE"
+        },
+        "name": {
+          "description": "Localized language names",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LocalizedText"
+          },
+          "example": [
+            {
+              "language": "DE",
+              "text": "Deutsch"
+            },
+            {
+              "language": "EN",
+              "text": "German"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "readOnly": true
+    },
+    "LocalizedText": {
+      "description": "A localized text string",
+      "required": [
+        "language",
+        "text"
+      ],
+      "type": "object",
+      "properties": {
+        "language": {
+          "description": "ISO-639-1 language code",
+          "minLength": 1,
+          "type": "string"
+        },
+        "text": {
+          "description": "The localized text",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "readOnly": true
+    },
+    "StatisticsResponse": {
+      "description": "Statistical data of the holidays database",
+      "required": [
+        "oldestStartDate",
+        "youngestStartDate"
+      ],
+      "type": "object",
+      "properties": {
+        "youngestStartDate": {
+          "format": "date",
+          "description": "The youngest holiday start date in the database",
+          "type": "string"
+        },
+        "oldestStartDate": {
+          "format": "date",
+          "description": "The oldest holiday start date in the database",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "readOnly": true
+    },
+    "SubdivisionReference": {
+      "description": "Representation of a subdivision reference",
+      "required": [
+        "code",
+        "shortName"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Subdivision code",
+          "minLength": 1,
+          "type": "string",
+          "example": "DE-BE"
+        },
+        "shortName": {
+          "description": "Short name for display",
+          "minLength": 1,
+          "type": "string",
+          "example": "BE"
+        }
+      },
+      "additionalProperties": false,
+      "readOnly": true
+    },
+    "SubdivisionResponse": {
+      "description": "Representation of a subdivision",
+      "required": [
+        "category",
+        "code",
+        "comment",
+        "name",
+        "officialLanguages",
+        "shortName"
+      ],
+      "type": "object",
+      "properties": {
+        "category": {
+          "description": "Localized categories of the subdivision",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LocalizedText"
+          },
+          "example": [
+            {
+              "language": "DE",
+              "text": "Bundesland"
+            },
+            {
+              "language": "EN",
+              "text": "Federal state"
+            }
+          ]
+        },
+        "children": {
+          "description": "Child subdivisions",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubdivisionResponse"
+          }
+        },
+        "code": {
+          "description": "Subdivision code",
+          "minLength": 1,
+          "type": "string",
+          "example": "DE-BE"
+        },
+        "comment": {
+          "description": "Localized comments of the subdivision",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LocalizedText"
+          },
+          "example": null
+        },
+        "isoCode": {
+          "description": "ISO 3166-2 subdivision code (if defined)",
+          "type": "string",
+          "example": "DE-BE"
+        },
+        "name": {
+          "description": "Localized names of the subdivision",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LocalizedText"
+          },
+          "example": [
+            {
+              "language": "DE",
+              "text": "Berlin"
+            },
+            {
+              "language": "EN",
+              "text": "Berlin"
+            }
+          ]
+        },
+        "officialLanguages": {
+          "description": "Official languages as ISO-639-1 codes",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "shortName": {
+          "description": "Short name for display",
+          "minLength": 1,
+          "type": "string",
+          "example": "BE"
+        }
+      },
+      "additionalProperties": false,
+      "readOnly": true
+    }
+  },
+  "parameters": {},
+  "responses": {},
+  "securityDefinitions": {},
+  "security": [],
+  "tags": [
+    {
+      "name": "Holidays",
+      "description": "Reads public and school holidays"
+    },
+    {
+      "name": "Regional",
+      "description": "Reads countries, languages, subdivisions and organizational units"
+    },
+    {
+      "name": "Statistics",
+      "description": "Reads statistical data about stored holidays"
+    }
+  ]
+}
